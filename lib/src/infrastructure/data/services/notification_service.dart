@@ -1,7 +1,7 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin _notificationsPlugin =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   NotificationService() {
@@ -9,25 +9,34 @@ class NotificationService {
   }
 
   Future<void> _initializeNotifications() async {
-    const initializationSettings = InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-    );
-    await _notificationsPlugin.initialize(initializationSettings);
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  Future<void> showNotification(String message) async {
-    const androidDetails = AndroidNotificationDetails(
-      'hr_broadcast_channel',
-      'HR Broadcast Notifications',
-      importance: Importance.max,
-      priority: Priority.high,
+  Future<void> showNotification(
+    String message, {
+    required int notificationId,
+  }) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+          'geofence_channel',
+          'Geofence Notifications',
+          importance: Importance.max,
+          priority: Priority.high,
+          showWhen: true,
+        );
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
     );
-    const notificationDetails = NotificationDetails(android: androidDetails);
-    await _notificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch,
-      'HR Broadcast',
+
+    await _flutterLocalNotificationsPlugin.show(
+      notificationId,
+      'Office Area Notification',
       message,
-      notificationDetails,
+      platformChannelSpecifics,
     );
   }
 }

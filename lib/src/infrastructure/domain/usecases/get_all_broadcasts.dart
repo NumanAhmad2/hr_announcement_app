@@ -7,6 +7,6 @@ class GetAllBroadcasts {
   GetAllBroadcasts(this._repository);
 
   Future<List<AnnouncementModel>> call() async {
-    return await _repository.getAllBroadcasts();
+    return await _repository.getAnnouncements();
   }
 }
